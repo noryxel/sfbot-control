@@ -266,14 +266,14 @@
 
 - [ ] ยืนยัน asset อัปโหลดครบ (EXE + ZIP) + digest ตรงเครื่อง
 
-- [ ] วิธีทำมือ (เก็บไว้อ้างกลไก — ไม่ต้องใช้แล้ว): `POST /repos/haremking7025/sfbot-control/releases`
+- [ ] วิธีทำมือ (เก็บไว้อ้างกลไก — ไม่ต้องใช้แล้ว): `POST /repos/noryxel/sfbot-control/releases`
       (tag_name/name/body = สรุปที่เปลี่ยน) แล้ว `POST /uploads.github.com/.../assets?name=...` (201 ทั้งคู่)
 
 - [ ] ถ้ามี `gh` CLI ใช้วิธีเดิมได้:
 
   ```bash
   gh release create v1.2.2 dist/SFKeyword/SFKeyword_v1.2.2.exe dist/SFKeyword/SFKeyword_v1.2.2.zip \
-    --repo haremking7025/sfbot-control --title "SFKeyword v1.2.2" --notes "📝 สรุปสิ่งที่เปลี่ยนในเวอร์ชันนี้"
+    --repo noryxel/sfbot-control --title "SFKeyword v1.2.2" --notes "📝 สรุปสิ่งที่เปลี่ยนในเวอร์ชันนี้"
   ```
 
 ---
@@ -300,7 +300,7 @@
   ```json
   {
     "version": "1.2.2",
-    "url": "https://github.com/haremking7025/sfbot-control/releases/download/v1.2.2/SFKeyword_v1.2.2.exe",
+    "url": "https://github.com/noryxel/sfbot-control/releases/download/v1.2.2/SFKeyword_v1.2.2.exe",
     "sha256": "8feaf14f55e96320a08f3c793b92c4a8c1c86a260f299ffbcf48ac5056728664",
     "size": 28965123,
     "notes": "สรุปสิ่งที่เปลี่ยนในเวอร์ชันนี้ (แสดงในหน้าต่างอัปเดต)"
@@ -508,4 +508,4 @@ constants.py (VERSION) → gates (ruff + compile + boot smoke 7 แท็บ + h
     ถ้าต้องติดตั้ง release เก่ากลับขึ้น GitHub: tools/restore_release.py --tag <tag> --apply (ตรวจ sha กับ manifest)
 ```
 
-สร้างโดย [haremking7025](https://github.com/haremking7025) · สำหรับ SFKeyword Desktop
+สร้างโดย [noryxel](https://github.com/noryxel) · สำหรับ SFKeyword Desktop

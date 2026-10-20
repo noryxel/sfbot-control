@@ -258,22 +258,22 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_tools/measure_st
 2. **อัปเดต release บน GitHub** (`gh` ต้อง login แล้ว):
 
    ```bash
-   gh release delete-asset v<ver> SFKeyword_v<ver>.zip --repo haremking7025/sfbot-control -y
-   gh release upload v<ver> "dist/SFKeyword/SFKeyword_v<ver>.exe#/SFKeyword_v<ver>.exe" "SFKeyword_v<ver>.zip#/SFKeyword_v<ver>.zip" --repo haremking7025/sfbot-control --clobber
+   gh release delete-asset v<ver> SFKeyword_v<ver>.zip --repo noryxel/sfbot-control -y
+   gh release upload v<ver> "dist/SFKeyword/SFKeyword_v<ver>.exe#/SFKeyword_v<ver>.exe" "SFKeyword_v<ver>.zip#/SFKeyword_v<ver>.zip" --repo noryxel/sfbot-control --clobber
    ```
 
    ตรวจว่า asset ถูกต้อง (ขนาด + digest ตรงกับเครื่อง):
 
    ```bash
-   gh release view v<ver> --repo haremking7025/sfbot-control --json assets -q '.assets[] | .name + " " + (.size|tostring) + " " + .digest'
+   gh release view v<ver> --repo noryxel/sfbot-control --json assets -q '.assets[] | .name + " " + (.size|tostring) + " " + .digest'
    ```
 
-3. **อัปเดต `update.json`** ใน repo `haremking7025/sfbot-control` (clone ไว้ที่ `/tmp/sfbot-control`):
+3. **อัปเดต `update.json`** ใน repo `noryxel/sfbot-control` (clone ไว้ที่ `/tmp/sfbot-control`):
 
    ```json
    {
      "version": "<ver>",
-     "url": "https://github.com/haremking7025/sfbot-control/releases/download/v<ver>/SFKeyword_v<ver>.exe",
+     "url": "https://github.com/noryxel/sfbot-control/releases/download/v<ver>/SFKeyword_v<ver>.exe",
      "sha256": "<sha256 ของ EXE>",
      "size": <ขนาด EXE>,
      "notes": "สรุปสิ่งที่เปลี่ยนในเวอร์ชันนี้ (แสดงในหน้าต่างอัปเดต)"
@@ -292,7 +292,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_tools/measure_st
    ```python
    python -X utf8 -c "
    import urllib.request, json, hashlib
-   j = json.load(urllib.request.urlopen('https://raw.githubusercontent.com/haremking7025/sfbot-control/main/update.json'))
+   j = json.load(urllib.request.urlopen('https://raw.githubusercontent.com/noryxel/sfbot-control/main/update.json'))
    data = urllib.request.urlopen(urllib.request.Request(j['url'], headers={'User-Agent': 'Mozilla/5.0'})).read()
    print('MATCH', hashlib.sha256(data).hexdigest() == j['sha256'] and len(data) == j['size'])
    "

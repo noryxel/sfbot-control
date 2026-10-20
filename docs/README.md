@@ -300,7 +300,7 @@ build_client.bat
 ## 🔒 ความปลอดภัย
 
 - **ตอนเปิดโปรแกรมยิงเน็ตชุดเดียว = ตรวจอัปเดต + สวิตช์ปิดปรับปรุง** — ไปที่
-  `raw.githubusercontent.com/haremking7025/sfbot-control` (มี fallback เป็น GitHub Contents API)
+  `raw.githubusercontent.com/noryxel/sfbot-control` (มี fallback เป็น GitHub Contents API)
   **ครั้งเดียว ก่อนหน้าต่างหลักขึ้น** (`updater.check_on_startup_sync` เรียกจาก `sfkeyword.pyw`)
   แล้วจบ — ไม่มีตัวตรวจเบื้องหลังระหว่างใช้งาน · ดึงไม่ได้/เน็ตล่ม = เปิดโปรแกรมต่อทันที
   (ไม่ค้าง ไม่บล็อก) · **ยกเว้นเปิดแบบ `--tray`** (เปิดพร้อมวินโดวส์) ที่ข้ามขั้นนี้ทั้งขั้น
