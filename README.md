@@ -17,7 +17,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 | `docs/build-protected.md` | วิธี build แบบกันโค้ด (Cython + PyArmor) โดยไม่ใช้ vcvarsall + ขั้นตอน Release — ดูได้ที่ [docs/build-protected.md](docs/build-protected.md) |
 | `docs/README.md` | เอกสารเต็มของโปรเจกต์ SFKeyword (ความสามารถ, โครงสร้างโค้ด, แก้ปัญหา) — ดูได้ที่ [docs/README.md](docs/README.md) |
 
-แอปจะอ่านไฟล์ทั้งสองผ่าน `https://raw.githubusercontent.com/haremking7025/sfbot-control/main/...` ทุกครั้งที่เปิดโปรแกรม
+แอปจะอ่านไฟล์ทั้งสองผ่าน `https://raw.githubusercontent.com/noryxel/sfbot-control/main/...` ทุกครั้งที่เปิดโปรแกรม
 
 ---
 
@@ -37,7 +37,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
    ```json
    {
      "version": "1.3.99",
-     "url": "https://github.com/haremking7025/sfbot-control/releases/download/v1.3.99/SFKeyword_v1.3.99.exe",
+     "url": "https://github.com/noryxel/sfbot-control/releases/download/v1.3.99/SFKeyword_v1.3.99.exe",
      "sha256": "479D9B9A4A83D1653513918C8DEB2C363646625DA578FB41A211D764B3FEAA78",
      "size": 28766074,
      "notes": "หัวข้อสรุปหนึ่งบรรทัด\n\n• สิ่งที่เปลี่ยนข้อ 1\n• สิ่งที่เปลี่ยนข้อ 2"
@@ -59,7 +59,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
    venv/Scripts/python.exe tools/release_publish.py --version 1.3.99 \
      --summary-file dist/release_summary_v1.3.99.txt --apply
    ```
-   ด่านที่รันให้เองก่อนแตะ GitHub: รุ่นต้องไม่ถอยหลัง · สวิตช์ปิดปรับปรุงต้องปิดอยู่ · ชุดด่านต้องเขียว · EXE ต้องเปิดขึ้นจริง — ไม่ผ่านข้อใด = **ไม่ commit** (เครื่องนี้ไม่มี `gh` CLI จึงใช้ GitHub REST API ผ่าน token จาก `git credential fill` · ถ้าจะสั่งเองด้วย gh ก็ได้: `gh release create v1.3.99 <EXE> <ZIP> --repo haremking7025/sfbot-control` · ถ้าอยาก commit เองให้เติม `--no-commit`)
+   ด่านที่รันให้เองก่อนแตะ GitHub: รุ่นต้องไม่ถอยหลัง · สวิตช์ปิดปรับปรุงต้องปิดอยู่ · ชุดด่านต้องเขียว · EXE ต้องเปิดขึ้นจริง — ไม่ผ่านข้อใด = **ไม่ commit** (เครื่องนี้ไม่มี `gh` CLI จึงใช้ GitHub REST API ผ่าน token จาก `git credential fill` · ถ้าจะสั่งเองด้วย gh ก็ได้: `gh release create v1.3.99 <EXE> <ZIP> --repo noryxel/sfbot-control` · ถ้าอยาก commit เองให้เติม `--no-commit`)
 
 5. **ตรวจหลังปล่อย** — ดาวน์โหลดไฟล์จาก release จริงมาเทียบ size + SHA-256 กับ `update.json` (`tools/_release_consistency_verify.py --strict-net --deep`) → ตรงแล้วทุกเครื่องที่เปิด SFKeyword จะเห็นหน้าต่าง "มีอัปเดตใหม่" → กดอัปเดต → ดาวน์โหลด + ตรวจ SHA-256/ขนาด → รีสตาร์ทอัตโนมัติ
 
@@ -105,7 +105,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 ```json
 {
   "version": "1.3.98",
-  "url": "https://github.com/haremking7025/sfbot-control/releases/download/v1.3.98/SFKeyword_v1.3.98.exe",
+  "url": "https://github.com/noryxel/sfbot-control/releases/download/v1.3.98/SFKeyword_v1.3.98.exe",
   "sha256": "FCF5D4A88996065ADD6C31FBE557EE82E0D27F9169CC565446BCDC011FE4BE7A",
   "size": 28792291,
   "notes": "ตรวจรุ่นใหม่ได้โดยไม่ต้องปิดโปรแกรม และโปรแกรมจดคำตอบของเว็บที่อ่านผลไม่ได้ไว้ทบทวน\n\n• ตรวจเปิดตัวโปรแกรมที่แพ็กแล้วได้ขณะโปรแกรมเปิดอยู่ ไม่ปิดและไม่แตะหน้าต่างของคุณ\n• โปรแกรมจดคำตอบของเว็บที่อ่านผลไม่ได้ไว้ทบทวนเป็นรอบ เพื่อเติมคำและแก้อาการค้างหรือยิงซ้ำได้ตรงจุด\n• ถ้อยคำรอบอัตโนมัติตอนตีห้านาทีมีฉากตรวจครบทั้งสำเร็จ ยังไม่ทราบผล และยังไม่พบคีย์"
@@ -123,4 +123,4 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 
 ---
 
-สร้างโดย [haremking7025](https://github.com/haremking7025) · สำหรับ SFKeyword Desktop
+สร้างโดย [noryxel](https://github.com/noryxel) · สำหรับ SFKeyword Desktop
