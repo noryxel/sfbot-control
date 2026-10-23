@@ -31,7 +31,9 @@
 ## 🖥 ความต้องการ
 
 - **Windows 10/11** (โค้ดพึ่งพา registry, `pythonw.exe`, Windows mutex, Run key)
-- **Python 3.10+** พร้อม Tkinter (ติดตั้งจาก python.org แล้วติ๊ก "tcl/tk and IDLE")
+- **ติดตั้งด้วยตัวติดตั้งหรือใช้ไฟล์ EXE ไม่ต้องมี Python** — ตัวโปรแกรมถูกแพ็กมาพร้อมทุกอย่าง
+- **Python 3.10+** พร้อม Tkinter — เฉพาะกรณีรันจากซอร์สโค้ด (ติดตั้งจาก python.org แล้วติ๊ก
+  "tcl/tk and IDLE")
 - ตอน build เท่านั้น: Microsoft Visual C++ Build Tools **เฉพาะถ้าต้องการกันโค้ด
   (Cython + PyArmor)** — build แบบไม่กันโค้ดไม่ต้องใช้
 
@@ -39,7 +41,33 @@
 
 ## 🚀 วิธีเปิดใช้
 
-### รันจากซอร์สโค้ด
+### 1) ติดตั้งด้วยตัวติดตั้ง (แนะนำ)
+
+วิธีนี้เหมาะกับผู้ใช้ทั่วไป — คลิกไม่กี่ครั้ง ไม่ต้องมี Python และไม่ต้องใช้สิทธิ์ผู้ดูแลระบบ
+
+1. ดาวน์โหลด **`SFKeyword_v<เวอร์ชัน>_Setup.exe`** จากหน้า Releases
+   (`https://github.com/noryxel/sfbot-control/releases/latest`) — ไฟล์เดียวจบ
+2. ดับเบิลคลิกแล้วทำตามหน้าจอ ติ๊ก "สร้างทางลัดเดสก์ท็อป" ตามต้องการ
+3. ตัวติดตั้งคัดลอกโปรแกรมไปที่ `%LOCALAPPDATA%\Programs\SFKeyword` พร้อมสร้างทางลัด
+   เดสก์ท็อป + Start Menu (`SFKeyword`) และลงทะเบียนใน *แอปและฟีเจอร์* ให้ถอนได้จากตรงนั้น
+4. เปิดโปรแกรมจากทางลัด — ตั้งแต่นี้ไปเมื่อมีรุ่นใหม่ โปรแกรมจะเด้งหน้าต่างอัปเดตให้กดเอง
+
+> ⚠ ตัวติดตั้งยังไม่ได้ code-sign — Windows SmartScreen อาจเตือนครั้งแรก
+> (กด "More info" → "Run anyway")
+> · ข้อมูลบัญชี/คุกกี้/การตั้งค่าอยู่ที่ `%LOCALAPPDATA%\SFKeyword` และ **ไม่ถูกลบตอนถอน**
+>   เว้นแต่ติ๊ก "ลบข้อมูลผู้ใช้" ในหน้าถอน
+> · ติดตั้งแบบเงียบ/กำหนดโฟลเดอร์เอง/ถอนโดยไม่เปิดหน้าจอ: ดู [INSTALLER.md](INSTALLER.md)
+
+### 2) ใช้ไฟล์ EXE ตรง ๆ (ไม่ติดตั้ง)
+
+ดาวน์โหลด `SFKeyword_v<เวอร์ชัน>.exe` จากหน้า Releases แล้ววางไว้ในโฟลเดอร์ที่ต้องการ
+ดับเบิลคลิกเปิดได้ทันที (ไฟล์เดียว ไม่ต้องติดตั้ง ไม่ต้องมี Python) — เหมาะกับเครื่องที่ใช้ชั่วคราว
+หรือเครื่องที่ไม่อยากแตะ registry
+
+> ใช้ไฟล์จากหน้า Releases เท่านั้น (อย่าคัดลอกจากโฟลเดอร์ `dist\` ของเครื่องอื่น)
+> — updater ตรวจ SHA-256/ขนาดก่อนติดตั้งทุกครั้ง
+
+### 3) รันจากซอร์สโค้ด (สำหรับพัฒนา)
 
 ```bat
 :: ติดตั้ง dependencies ครั้งแรก (manifest กลางที่ root)
@@ -148,11 +176,13 @@ call "%~dp0build_client.bat"
 ### ปล่อย release (แนวปฏิบัติล่าสุด)
 
 ก่อนปล่อย: gates = ruff + compileall + **boot smoke headless** (สร้าง `App` จากซอร์ส → สลับครบ
-7 แท็บ → วัดกริดการ์ดตั้งค่า) แล้วปล่อยตาม `docs/RELEASE_CHECKLIST.md`:
+8 แท็บ → วัดกริดการ์ดตั้งค่า) แล้วปล่อยตาม `docs/RELEASE_CHECKLIST.md`:
 
 0. `tools/release_publish.py --apply` **เริ่มด้วยด่านกันพลาด 4 ข้อ** — รุ่นใหม่กว่าเดิม · ปิด
    ปรับปรุงอยู่หรือไม่ · ชุดด่านเขียว · EXE เปิดขึ้นจริง (ถอยรุ่นไม่ได้แล้ว ⇒ ไม่มีธงข้ามด่าน ①②)
-1. `tools/release_publish.py --apply` — สร้าง release + อัปโหลด EXE/ZIP + อัปเดต `update.json`
+1. `tools/release_publish.py --apply` — สร้าง release + อัปโหลด EXE/ZIP + แนบตัวติดตั้ง Setup
+   (อัตโนมัติเมื่อมี `dist\SFKeyword\SFKeyword_v<ver>_Setup.exe` · `--no-setup` เพื่อไม่แนบ)
+   + อัปเดต `update.json`
    + append `docs/release_history.csv` ผ่าน GitHub REST API (token จาก `git credential fill` —
    เครื่องนี้ไม่มี `gh` CLI) · ตรวจ sha ก่อนแตะ GitHub และยืนยันด้วยการดาวน์โหลดจริงหลังอัปโหลด
    · อุ่นแคช CDN ให้เอง (ดึง asset ที่เพิ่งอัปโหลด 1 รอบ — ครั้งแรกสุดของ asset ใหม่ช้ากว่าปกติมาก)
@@ -246,7 +276,7 @@ build_client.bat
 | `pyproject.toml` | config `ruff` — ตรวจบั๊ก/เดดโค้ด (รัน `python -m ruff check
   --no-respect-gitignore .` — ต้องมี flag เพราะ `.gitignore` ซ่อนซอร์สไว้) |
 | `docs/release_history.csv` | ประวัติ release (ตรงกับ release จริงบน GitHub) |
-| `docs/RELEASE_CHECKLIST.md` | checklist ปล่อยเวอร์ชันใหม่ (build → zip → sha256 → release → update.json) — ไล่ตามลำดับทุกครั้ง |
+| `docs/RELEASE_CHECKLIST.md` | checklist ปล่อยเวอร์ชันใหม่ (build → zip/setup → sha256 → release → update.json) — ไล่ตามลำดับทุกครั้ง |
 | `assets/sf_logo.ico` + `sf_logo.jpg` | ไอคอนแอป — บิ๊วด์ต้องมีทั้งคู่ (`--icon` + `--add-data`) และทุก popup/หน้าต่างย่อยติดโลโก้นี้ · ไฟล์หายแล้วบิ๊วด์จะหยุดเอง |
 
 ### แพ็กเกจ `sfkeyword_lib/`

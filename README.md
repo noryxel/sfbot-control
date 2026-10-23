@@ -11,7 +11,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 | `update.json` | ประกาศเวอร์ชันล่าสุด + ลิงก์ดาวน์โหลด **EXE** + SHA-256 + ขนาดไฟล์ (bytes) + `notes` ที่หน้าต่างอัปเดตแสดงให้ผู้ใช้เห็น |
 | `kill_switch.json` | สั่งปิดโปรแกรมทุกเครื่องจากระยะไกล (กรณีต้องการปิดปรับปรุงชั่วคราว) |
 | `README.md` | เอกสารนี้ |
-| `docs/RELEASE_CHECKLIST.md` | ขั้นตอนปล่อยเวอร์ชันใหม่แบบละเอียด (build → EXE/ZIP → sha256 → release → update.json) — ดูได้ที่ [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) |
+| `docs/RELEASE_CHECKLIST.md` | ขั้นตอนปล่อยเวอร์ชันใหม่แบบละเอียด (build → EXE/ZIP/Setup → sha256 → release → update.json) — ดูได้ที่ [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md) |
 | `docs/release_history.csv` | ประวัติการปล่อยทุกเวอร์ชัน (ชื่อไฟล์ · SHA-256 · วันเวลา) — สคริปต์ปล่อยเติมแถวให้เอง |
 | `docs/WORDING.md` | ดิกชันนารีคำที่ผู้ใช้เห็น + กติกาถ้อยคำ (รวมข้อความใน `notes`) |
 | `docs/build-protected.md` | วิธี build แบบกันโค้ด (Cython + PyArmor) โดยไม่ใช้ vcvarsall + ขั้นตอน Release — ดูได้ที่ [docs/build-protected.md](docs/build-protected.md) |
@@ -55,12 +55,12 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 
    > updater รองรับ schema เก่า (`latest_version` / `download_url` / `release_notes` / `force_update`) อยู่ด้วย แต่ repo นี้ใช้ schema ใหม่ข้างต้น · `force_update: true` = เด้งหน้าต่างอัปเดตแบบบังคับ
 
-4. **ปล่อยด้วยคำสั่งเดียว** — สร้าง release + อัปโหลด EXE/ZIP + เขียน `update.json` + เติมแถว CSV + commit/push เฉพาะ metadata:
+4. **ปล่อยด้วยคำสั่งเดียว** — สร้าง release + อัปโหลด EXE/ZIP (+ แนบตัวติดตั้ง `_Setup.exe` ให้เองเมื่อมีไฟล์) + เขียน `update.json` + เติมแถว CSV + commit/push เฉพาะ metadata:
    ```bash
    venv/Scripts/python.exe tools/release_publish.py --version 1.3.99 \
      --summary-file dist/release_summary_v1.3.99.txt --apply
    ```
-   ด่านที่รันให้เองก่อนแตะ GitHub: รุ่นต้องไม่ถอยหลัง · สวิตช์ปิดปรับปรุงต้องปิดอยู่ · ชุดด่านต้องเขียว · EXE ต้องเปิดขึ้นจริง — ไม่ผ่านข้อใด = **ไม่ commit** (เครื่องนี้ไม่มี `gh` CLI จึงใช้ GitHub REST API ผ่าน token จาก `git credential fill` · ถ้าจะสั่งเองด้วย gh ก็ได้: `gh release create v1.3.99 <EXE> <ZIP> --repo noryxel/sfbot-control` · ถ้าอยาก commit เองให้เติม `--no-commit`)
+   ด่านที่รันให้เองก่อนแตะ GitHub: รุ่นต้องไม่ถอยหลัง · สวิตช์ปิดปรับปรุงต้องปิดอยู่ · ชุดด่านต้องเขียว · EXE ต้องเปิดขึ้นจริง — ไม่ผ่านข้อใด = **ไม่ commit** (เครื่องนี้ไม่มี `gh` CLI จึงใช้ GitHub REST API ผ่าน token จาก `git credential fill` · ถ้าจะสั่งเองด้วย gh ก็ได้: `gh release create v1.3.99 <EXE> <ZIP> <Setup> --repo noryxel/sfbot-control` · ถ้าอยาก commit เองให้เติม `--no-commit`)
 
 5. **ตรวจหลังปล่อย** — ดาวน์โหลดไฟล์จาก release จริงมาเทียบ size + SHA-256 กับ `update.json` (`tools/_release_consistency_verify.py --strict-net --deep`) → ตรงแล้วทุกเครื่องที่เปิด SFKeyword จะเห็นหน้าต่าง "มีอัปเดตใหม่" → กดอัปเดต → ดาวน์โหลด + ตรวจ SHA-256/ขนาด → รีสตาร์ทอัตโนมัติ
 
