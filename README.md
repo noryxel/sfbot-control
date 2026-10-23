@@ -15,6 +15,7 @@ Repo นี้ใช้เป็น **เซิร์ฟเวอร์อัป
 | `docs/release_history.csv` | ประวัติการปล่อยทุกเวอร์ชัน (ชื่อไฟล์ · SHA-256 · วันเวลา) — สคริปต์ปล่อยเติมแถวให้เอง |
 | `docs/WORDING.md` | ดิกชันนารีคำที่ผู้ใช้เห็น + กติกาถ้อยคำ (รวมข้อความใน `notes`) |
 | `docs/build-protected.md` | วิธี build แบบกันโค้ด (Cython + PyArmor) โดยไม่ใช้ vcvarsall + ขั้นตอน Release — ดูได้ที่ [docs/build-protected.md](docs/build-protected.md) |
+| `docs/INSTALLER.md` | ตัวติดตั้ง `SFKeyword_v<ver>_Setup.exe` — วิธี build, ติดตั้ง/ถอน, โหมดเงียบ — ดูได้ที่ [docs/INSTALLER.md](docs/INSTALLER.md) |
 | `docs/README.md` | เอกสารเต็มของโปรเจกต์ SFKeyword (ความสามารถ, โครงสร้างโค้ด, แก้ปัญหา) — ดูได้ที่ [docs/README.md](docs/README.md) |
 
 แอปจะอ่านไฟล์ทั้งสองผ่าน `https://raw.githubusercontent.com/noryxel/sfbot-control/main/...` ทุกครั้งที่เปิดโปรแกรม
