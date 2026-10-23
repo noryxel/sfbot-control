@@ -249,6 +249,10 @@
 
   - ตรวจไฟล์ EXE/ZIP + sha ก่อนแตะ GitHub · สร้าง release + อัปโหลด · ยืนยันด้วย digest ที่ GitHub
     รายงาน + ดาวน์โหลดจริงมาเทียบ sha · เขียน `update.json` และ append CSV ให้เอง · รันซ้ำได้ไม่พัง
+  - **ตัวติดตั้ง `SFKeyword_v<ver>_Setup.exe` แนบเป็น asset ที่ 3 ให้อัตโนมัติ** เมื่อไฟล์อยู่ที่
+    `dist\SFKeyword\` (ตัวขับ protected สร้างให้ท้ายบิลด์ — ดู [INSTALLER.md](INSTALLER.md))
+    · ระบุที่อื่นเอง: `--setup <path>` · ไม่ต้องแนบ (บิลด์ที่ข้ามขั้น Setup): `--no-setup`
+    · Setup **ไม่เข้า `update.json`/CSV** (สองที่นั้นชี้ EXE ตรง ๆ ตาม schema ของ updater)
   - **ขั้น 1 ของ `--apply` = ด่านกันพลาดก่อนปล่อย 4 ข้อ** (ถอยรุ่นไม่ได้แล้ว ⇒ ห้ามข้าม):
     ① รุ่นที่จะปล่อยต้องไม่ต่ำกว่ารุ่นล่าสุดในประวัติ ② สวิตช์ปิดปรับปรุงต้องปิดอยู่
     (เปิดอยู่ = เครื่องลูกค้าปิดตัวเองก่อนถึงขั้นตรวจอัปเดต ⇒ ปล่อยไปก็ไม่มีใครได้)
@@ -264,10 +268,12 @@
 
   > ⚠️ tag ต้องตรงกับ `url` ใน update.json ทุกจุด (เครื่องมือเขียนให้เอง ถ้าทำมือต้องเช็ค)
 
-- [ ] ยืนยัน asset อัปโหลดครบ (EXE + ZIP) + digest ตรงเครื่อง
+- [ ] ยืนยัน asset อัปโหลดครบ (**EXE + ZIP + Setup**) + digest ตรงเครื่อง
+      (Setup เทียบ sha กับ `dist\SFKeyword\SFKeyword_v<ver>_Setup.exe` — ไม่มีใน CSV จึงต้องดาวน์โหลดมาเทียบเอง)
 
 - [ ] วิธีทำมือ (เก็บไว้อ้างกลไก — ไม่ต้องใช้แล้ว): `POST /repos/noryxel/sfbot-control/releases`
-      (tag_name/name/body = สรุปที่เปลี่ยน) แล้ว `POST /uploads.github.com/.../assets?name=...` (201 ทั้งคู่)
+      (tag_name/name/body = สรุปที่เปลี่ยน) แล้ว `POST /uploads.github.com/.../assets?name=...` (201 ทั้งสามไฟล์:
+      EXE · ZIP · Setup)
 
 - [ ] ถ้ามี `gh` CLI ใช้วิธีเดิมได้:
 

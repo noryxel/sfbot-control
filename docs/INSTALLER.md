@@ -54,6 +54,22 @@ venv/Scripts/python.exe tools/build_tools/build_installer.py \
 
 ---
 
+## แนบตัวติดตั้งในหน้าปล่อยรุ่น
+
+`tools/release_publish.py` แนบ `dist\SFKeyword\SFKeyword_v<ver>_Setup.exe` เป็น asset ที่ 3
+ของ release ให้อัตโนมัติเมื่อไฟล์อยู่ (รุ่นเดียวกันกับ EXE เท่านั้น — ชื่อไฟล์ต้องมีเลขรุ่นตรง)
+
+```bash
+venv/Scripts/python.exe tools/release_publish.py --version <ver> --apply --summary "…"   # แนบ Setup เอง
+venv/Scripts/python.exe tools/release_publish.py --version <ver> --apply --summary "…" --setup D:\path\Setup.exe
+venv/Scripts/python.exe tools/release_publish.py --version <ver> --apply --summary "…" --no-setup   # ไม่แนบ
+```
+
+Setup **ไม่ถูกใส่ใน `update.json` หรือ `docs/release_history.csv`** — สองที่นั้นชี้ EXE ตรง ๆ
+ตาม schema ของ updater · ตัวติดตั้งเป็นไฟล์ให้ผู้ใช้ใหม่กดโหลดเองจากหน้า release
+
+---
+
 ## ใช้งานแบบเงียบ (สำหรับ deploy/test)
 
 รับทั้ง `/silent` และ `--silent`:
