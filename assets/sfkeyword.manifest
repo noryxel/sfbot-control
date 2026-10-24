@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+  Manifest ของ SFKeyword — ประกาศว่ารองรับ "Windows 10/11 เท่านั้น"
+
+  ทำไมต้องมีไฟล์นี้: ถ้าไม่ส่งตัวเลือก manifest ให้ PyInstaller มันจะใส่ manifest
+  เริ่มต้นที่ประกาศ supportedOS ไว้ครบทุกยุดตั้งแต่ Vista / 7 / 8 / 8.1 / 10
+  ⇒ ตัวติดตั้ง/Windows จะมองว่าโปรแกรมรองรับวินโดวส์รุ่นเก่า ทั้งที่ตัวรัน
+  Python 3.14 เปิดบนรุ่นต่ำกว่า Windows 10 ไม่ขึ้นเลย (Program Compatibility
+  Assistant ก็ใช้ข้อมูลนี้ตัดสินใจด้วย) ⇒ ประกาศผิดและหลอกผู้ใช้
+
+  GUID 8e0f7a12-… = Windows 10 (Windows 11 ใช้ GUID เดียวกัน แยกด้วย build)
+  ห้ามเพิ่ม GUID ของ Vista/7/8/8.1 กลับเข้ามา — นโยบายคือ Win10/11 เท่านั้น
+-->
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <assemblyIdentity type="win32" name="SFKeyword" version="1.0.0.0" processorArchitecture="*"/>
+
+  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
+    <security>
+      <requestedPrivileges>
+        <!-- ไม่ขอสิทธิ์ผู้ดูแลระบบ: ติดตั้ง/ถอนเขียนใต้ HKCU เท่านั้น -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false"/>
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 + Windows 11 (Win11 ใช้ GUID ตัวเดียวกัน) -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/>
+    </application>
+  </compatibility>
+
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <!-- DPI: per-monitor v2 (Win10 1703+ / Win11) ถอยเป็น per-monitor ให้เอง -->
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">permonitorv2,permonitor</dpiAwareness>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+</assembly>
