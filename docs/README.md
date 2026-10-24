@@ -31,6 +31,7 @@
 ## 🖥 ความต้องการ
 
 - **Windows 10/11 เท่านั้น** (โค้ดพึ่งพา registry, `pythonw.exe`, Windows mutex, Run key) — Windows 7/8/8.1 ไม่รองรับแล้ว และ EXE/Setup ประกาศ `supportedOS` แค่ Windows 10 ใน `assets/sfkeyword.manifest`
+- **โปรเจกต์นี้เป็นแอป PC (Windows) ตัวเดียว — ไม่มีแอปมือถือ/Android** (เวอร์ชันมือถือถูกยกเลิกแล้ว) อะไรที่โหลด/ติดตั้งได้มีแค่ `SFKeyword_v<ver>.exe` กับ `SFKeyword_v<ver>_Setup.exe` เท่านั้น
 - **ติดตั้งด้วยตัวติดตั้งหรือใช้ไฟล์ EXE ไม่ต้องมี Python** — ตัวโปรแกรมถูกแพ็กมาพร้อมทุกอย่าง
 - **Python 3.10+** พร้อม Tkinter — เฉพาะกรณีรันจากซอร์สโค้ด (ติดตั้งจาก python.org แล้วติ๊ก
   "tcl/tk and IDLE")
