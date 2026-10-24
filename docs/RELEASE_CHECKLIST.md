@@ -332,12 +332,22 @@
 
 > ⚠️ **ห้าม commit ไฟล์ ZIP/EXE ลงใน repo** — .gitignore กันไว้แล้ว แนบเป็น release asset เท่านั้น
 
-> 🔒 **แนวปฏิบัติถาวร (v1.3.50+):** แอปอ่าน `update.json` + `kill_switch.json` แบบ **raw-first**
-> — เรียก `raw.githubusercontent.com` ก่อน (ไม่มี rate limit) แล้วค่อย fallback ไป
-> GitHub Contents API เผื่อ raw ล่ม **ห้ามสลับกลับเป็น API-first**: Contents API แบบไม่ login
-> จำกัด 60 req/hr/IP (IP ร่วมของ NAT เบิร์นหมดเร็ว) และ api.github.com contents ก็แคช CDN จริง
-> (ไม่ได้ "เห็นใหม่ทันที" ตามที่เคยเข้าใจ) — raw จึงทั้งไม่จำกัดและสดพอใช้ (อัปเดตโค้ดใน
-> `sfkeyword_lib/core/updater.py`: `_fetch_update_json` + `check_kill_switch`)
+> 🔒 **แนวปฏิบัติ (แก้ไข v1.5.6):** `update.json` อ่านผ่าน **GitHub Contents API ก่อน**
+> (`api.github.com/.../contents/update.json` ไม่มี CDN คั่น → เห็นรุ่นใหม่ทันทีหลัง push)
+> แล้วค่อยถอยไป `raw.githubusercontent.com` เมื่อ API ติดโควตา/ล่ม
+>
+> เดิมใช้ raw-first ตามกติกา v1.3.50 เพราะกลัวโควตา 60 ครั้ง/ชม. ต่อ IP — แต่พบว่า
+> raw ถูก CDN แคช `max-age=300` และ **ไม่สนใจ query string** (วัดแล้ว: ใส่ `?nocache=`
+> ต่างกันก็ยังได้ ETag เดิม + `X-Cache: HIT`, ใส่ `Cache-Control: no-cache` ก็ไม่ bypass)
+> ⇒ หลังปล่อยรุ่นใหม่ เครื่องลูกค้าบางคนเห็นรุ่นเก่าต่อได้ถึง ~5 นาที ซึ่งเสียหายกว่าโควตา
+> ที่ประหยัดได้ · มี cache ในหน่วยความจำ 30 วินาทีกันยิง API ซ้ำในรอบเดียว และถอย raw
+> อัตโนมัติเมื่อโดน 403/ล่ม (ด่าน V9 ใน `_updateflow_verify.py` คุมลำดับนี้ไว้)
+>
+> `kill_switch.json` **ยังเป็น raw-first** ตามเดิม (ไม่ได้เปลี่ยนในรอบนี้)
+>
+> **วิธีพิสูจน์ว่าสดจริง (ทำซ้ำได้):** `curl` Contents API แล้วถอด `content` (base64)
+> → ค่า `sha` ที่ API คืนมาต้องเท่ากับ `git hash-object update.json` ของไฟล์ในเครื่อง
+> (คือไบต์ที่ commit ไว้เป๊ะ ไม่ใช่สำเนาเก่าจาก CDN) · เทียบกับ raw ที่ยัง `max-age=300`
 
 ---
 
@@ -438,7 +448,8 @@
       วิธีกันคือ: รันด่านทั้งหมด + เปิด EXE ที่ build แล้วจริง (ด้านบน) ก่อนปล่อยทุกครั้ง
       · `force_update: true` ยังใช้บังคับ **ขึ้นรุ่นใหม่** ได้ตามปกติ (ตรวจครั้งเดียวตอนเปิดโปรแกรม)
       → ตรวจเร็ว: `tools/_updateflow_verify.py` (V1 ไม่เหลือร่องรอยระบบที่ถอดออก ·
-      V6–V8 ตรวจไฟล์/ความเร็ว/ลำดับ sha) และ `tools/_release_consistency_verify.py`
+      V6–V8 ตรวจไฟล์/ความเร็ว/ลำดับ sha · V9 ตรวจว่าเช็กอัปเดตถาม Contents API
+      ก่อน raw เพื่อไม่ให้ติดแคช CDN 5 นาที) และ `tools/_release_consistency_verify.py`
 
 - [ ] **สำรองรุ่นที่ยังอยู่บน GitHub ลงเครื่อง (ไม่ลบอะไร)** — ปกติตัวสำรองเกิดตอน prune เท่านั้น
       ⇒ รุ่นที่ยังไม่ถูกลบ (เช่นรุ่นที่เพิ่งปล่อย) **จะไม่มีสำเนาในเครื่องเลย** ถ้า release หายไป
