@@ -197,7 +197,8 @@ AST หา construct ที่ทำให้ Cython crash (เช่น `sorted
 | `python -X utf8 tools/_deadcode_verify.py` | เดดโค้ด: ฟังก์ชัน/ค่าคงที่ที่ไม่มีใครเรียก |
 | `python -X utf8 tools/_tamper_verify.py` | ชั้นกันการถูกแกะตอนรัน (19 เคส) |
 | `python -X utf8 tools/_redact_verify.py` | ความลับไม่หลุดลง log — 6 รูปแบบ + ชุด generate + ยิงผ่าน `logging` จริง |
-| `python -X utf8 tools/_buildhygiene_verify.py` | PATH ที่ใช้ build ถูกตัดแล้ว + บิลด์ไม่มี DLL ของโปรแกรมอื่นหลุดติด (H1–H5) |
+| `python -X utf8 tools/_buildhygiene_verify.py` | PATH ที่ใช้ build ถูกตัดแล้ว + บิลด์ไม่มี DLL ของโปรแกรมอื่นหลุดติด (H1–H6) |
+| `python -X utf8 tools/_win10only_verify.py` | รองรับเฉพาะ Windows 10/11: manifest ประกาศแค่ GUID ของ Win10 · ไม่มี GUID Vista/7/8/8.1 · ตัวขับบิลด์ส่ง `--manifest` ครบทั้งสามทาง · `windows_compat` ไม่รับรุ่นเก่า (W1–W6) |
 | `python -X utf8 tools/_startupreg_verify.py` | ค่าเปิดพร้อม Windows ต้องชี้ `sfkeyword.pyw` ไม่ใช่สคริปต์ทดสอบใน tools\ (S1–S12) |
 | `python -X utf8 tools/_leftover_verify.py` | ไม่มีของค้างจากรอบทดสอบ: Run/RunOnce · Startup · scheduled task · ไฟล์ชั่วคราว · โฟลเดอร์ %TEMP% ค้าง (B1–B6) |
 | `python -X utf8 tools/_startupheal_proof.py` | เปิดแอปจริงแล้วค่าเปิดพร้อมวินหดอส์ถูกซ่อมถูกต้อง (สวิตช์ปิด=ไม่แตะ) (H1–H4) |
@@ -427,6 +428,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_tools/smoke_test
 
 ## รองรับวินโดวส์เวอร์ชัน/สถาปัตยกรรมไหน
 
+> 🎯 **นโยบายตั้งแต่ v1.5.7: รองรับเฉพาะ Windows 10 และ Windows 11 เท่านั้น** —
+> ตัดการรองรับ Windows 7/8/8.1 ออกทั้งในโค้ด (ไม่มีทางถอยให้รุ่นเก่า), manifest ของ
+> EXE/Setup และเอกสาร (ด่าน `tools/_win10only_verify.py` W1–W6 คุมไว้)
+
 บิลด์เป็น **PyInstaller onefile ที่ฝังตัวรัน Python 3.14** ⇒ พื้นขั้นต่ำของ
 ระบบปฏิบัติการถูกกำหนดโดย »ตัวรัน« ไม่ใช่โดยโค้ดแอป (เขียนโค้ดดีแค่ไหนก็ไม่ช่วย
 Windows 7) และแต่ละบิลด์โหลดได้เฉพาะ **สถาปัตยกรรมเดียวกัน**:
@@ -437,10 +442,16 @@ Windows 7) และแต่ละบิลด์โหลดได้เฉพ
 | `SFKeyword_v<ver>_x86.exe` | Windows 10/11 32-bit | Python 3.14 32-bit |
 | `SFKeyword_v<ver>_arm64.exe` | Windows 11 on ARM | Python 3.14 ARM64 |
 
-- **Windows 7 / 8.1 ใช้ไม่ได้** — Python 3.14 ไม่รองรับแล้ว การจะรองรับต้องถอย
+- **Windows 7 / 8 / 8.1 ไม่รองรับแล้ว (ตัดออกตั้งแต่ v1.5.7)** — Python 3.14 เปิดบนรุ่น
+  เหล่านี้ไม่ขึ้น และโค้ดไม่ได้เขียนทางถอยให้รุ่นเก่าอีกต่อไป การจะรองรับต้องถอย
   ทั้งโปรเจกต์ไป Python 3.8 (EOL แล้ว) ⇒ ไม่คุ้มกับความเสี่ยงด้านความปลอดภัย
+- **EXE และ Setup ประกาศ `supportedOS` แค่ Windows 10** ผ่าน `assets/sfkeyword.manifest`
+  (Win11 ใช้ GUID เดียวกัน) — ถ้าไม่ส่ง manifest PyInstaller จะใส่ค่าเริ่มต้นที่ประกาศ
+  Vista/7/8/8.1/10 ครบทุกตัว ทำให้ Windows/Program Compatibility Assistant เข้าใจผิดว่า
+  รองรับรุ่นเก่า ⇒ ตัวขับบิลด์ทั้งสามทาง (`build_protected_driver.py` · `build_client.bat` ·
+  `build_installer.py`) ส่ง `--manifest` ให้อัตโนมัติ · ด่าน: `tools/_win10only_verify.py`
 - โปรแกรม **ไม่ปิดตัวเอง** เมื่อพบวินโดวส์รุ่นต่ำกว่า — `core/windows_compat.py`
-  บันทึกเวอร์ชัน/สถาปัตยกรรมลง log แล้วขึ้นกล่องเตือน "ระบบปฏิบัติการที่อาจไม่รองรับ"
+  บันทึกเวอร์ชัน/สถาปัตยกรรมลง log แล้วขึ้นกล่อง "ระบบปฏิบัติการที่ไม่รองรับ"
   ให้ผู้ใช้ตัดสินใจต่อ (ดูเหตุผลใน `sfkeyword.pyw`)
 - ทุกจุดที่เรียก API วินโดวส์รุ่นใหม่ต้อง**ตรวจก่อนเรียก** ด้วย
   `windows_compat.api_available()` แล้วถอยไปใช้ค่าเริ่มต้นเสมอ
