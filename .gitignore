@@ -11,6 +11,9 @@ _pyarmor_out/
 *.exe
 *.zip
 
+# --- Local backups of git history (contains old source — never push) ---
+backups/
+
 # --- Virtualenv & caches ---
 venv/
 .pip-cache/
